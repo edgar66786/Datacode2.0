@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscripción Oficial - DATA CODE 2.0</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { 
+            background-color: #f4f6f8; 
+            padding: 40px 0; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+        }
+        .contenedor-cedula { 
+            max-width: 850px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 12px; 
+            border: 1px solid #e1e4e8;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06); 
+            overflow: hidden; 
+        }
+        .cabecera-institucional { 
+            padding: 30px 40px; 
+            background: linear-gradient(135deg, #4A0C1A 0%, #6B1226 100%); 
+            color: white; 
+            text-align: center; 
+            border-bottom: 4px solid #C8A14D; 
+            position: relative; 
+        }
+        .btn-regresar { 
+            position: absolute; 
+            left: 30px; 
+            top: 35px; 
+            color: #E3D9C6; 
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #C8A14D; 
+            padding: 6px 14px; 
+            border-radius: 6px; 
+            text-decoration: none; 
+            font-size: 0.85rem;
+            font-weight: 600; 
+            transition: all 0.2s; 
+        }
+        .btn-regresar:hover { 
+            background: #C8A14D; 
+            color: #4A0C1A; 
+        }
+        .seccion-bloque {
+            padding: 30px 40px;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .titulo-apartado { 
+            color: #6B1226; 
+            font-weight: 800; 
+            font-size: 1.05rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            margin-bottom: 15px; 
+            padding-bottom: 6px;
+            border-bottom: 2px solid #C8A14D; 
+        }
+        .item-regla { 
+            background: #f8f9fa; 
+            border-left: 4px solid #6B1226; 
+            padding: 10px 15px; 
+            margin-bottom: 8px; 
+            font-size: 0.9rem; 
+            color: #495057; 
+            border-radius: 0 6px 6px 0;
+        }
+        .item-requisito { 
+            background: #fdfcf7; 
+            border-left: 4px solid #C8A14D; 
+            padding: 10px 15px; 
+            margin-bottom: 8px; 
+            font-size: 0.9rem; 
+            color: #594a1e; 
+            border-radius: 0 6px 6px 0;
+        }
+        .form-label { 
+            color: #212529; 
+            font-weight: 600; 
+            font-size: 0.85rem; 
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .form-control { 
+            border-radius: 6px;
+            border: 1px solid #ced4da;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+        }
+        .form-control:focus { 
+            border-color: #6B1226; 
+            box-shadow: 0 0 0 0.2rem rgba(107, 18, 38, 0.12); 
+        }
+        .bloque-roster {
+            background: #fdfdfd;
+            border: 1px dashed #ced4da;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .btn-ejecutivo { 
+            background-color: #6B1226; 
+            color: white; 
+            border: none; 
+            border-radius: 6px;
+            padding: 12px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            font-size: 0.92rem;
+            transition: 0.2s; 
+        }
+        .btn-ejecutivo:hover { 
+            background-color: #4A0C1A; 
+            color: #C8A14D; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="contenedor-cedula">
+            
+            <div class="cabecera-institucional">
+                <a href="/torneo" class="btn-regresar">&larr; Catálogo</a>
+                <h2 style="font-weight: 800; letter-spacing: 0.5px; margin-top: 5px; font-size: 1.6rem;">{{ datos.nombre }}</h2>
+                <p class="mb-0 mt-1" style="color: #E3D9C6; font-size: 0.9rem; font-weight: 500;">Modalidad oficial: {{ datos.tipo }}</p>
+            </div>
+
+            <div class="px-4 pt-4 pb-0 bg-white">
+                <div class="alert alert-light border d-flex justify-content-between align-items-center mb-0">
+                    <div>
+                        <i class="bi bi-cash-coin me-2 text-warning fs-5"></i>
+                        <strong>Costo de Inscripción:</strong> {{ datos.costo }}
+                    </div>
+                    {% if datos.modalidad == 'Gratis' %}
+                        <span class="badge bg-success px-3 py-2">Evento Gratuito</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark px-3 py-2">Con Costo ($50 MXN)</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="seccion-bloque bg-white">
+                <h4 class="titulo-apartado">Reglamento Técnico Oficial</h4>
+                {% for regla in datos.reglas %}
+                    <div class="item-regla">{{ regla }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="seccion-bloque" style="background-color: #fafbfc;">
+                <h4 class="titulo-apartado" style="color: #9c7b31;">Requisitos de Validación Institucional</h4>
+                {% for req in datos.requisitos %}
+                    <div class="item-requisito">{{ req }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="seccion-bloque bg-white">
+                <h4 class="titulo-apartado">Confirmación de Registro al Torneo</h4>
+                
+                <form action="/procesar_torneo" method="POST">
+                    <input type="hidden" name="juego" value="{{ datos.nombre }}">
+                    <input type="hidden" name="modalidad" value="{{ datos.modalidad }}">
+                    <input type="hidden" name="costo" value="{{ datos.costo }}">
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Nombre del Equipo o Gamertag</label>
+                        <input type="text" class="form-control" name="equipo" placeholder="Ej. Linces Esports (o Individual)" required>
+                    </div>
+
+                    <div class="alert alert-info py-2 small mb-4">
+                        <i class="bi bi-info-circle-fill me-1"></i> Tu inscripción quedará vinculada automáticamente a tu cuenta y aparecerá de inmediato en tu gafete digital.
+                    </div>
+
+                    {% if datos.requiere_roster %}
+                        <div class="bloque-roster">
+                            <h5 class="text-secondary fw-bold mb-3" style="font-size: 0.9rem; text-transform: uppercase;">Integrantes del Equipo (Roster 5v5)</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-7 mb-2 mb-md-0"><input type="text" class="form-control" name="j2_nombre" placeholder="Nombre Completo - Jugador 2" required></div>
+                                <div class="col-md-5"><input type="text" class="form-control" name="j2_matricula" placeholder="Matrícula - Jugador 2" required></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-7 mb-2 mb-md-0"><input type="text" class="form-control" name="j3_nombre" placeholder="Nombre Completo - Jugador 3" required></div>
+                                <div class="col-md-5"><input type="text" class="form-control" name="j3_matricula" placeholder="Matrícula - Jugador 3" required></div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-7 mb-2 mb-md-0"><input type="text" class="form-control" name="j4_nombre" placeholder="Nombre Completo - Jugador 4" required></div>
+                                <div class="col-md-5"><input type="text" class="form-control" name="j4_matricula" placeholder="Matrícula - Jugador 4" required></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7 mb-2 mb-md-0"><input type="text" class="form-control" name="j5_nombre" placeholder="Nombre Completo - Jugador 5" required></div>
+                                <div class="col-md-5"><input type="text" class="form-control" name="j5_matricula" placeholder="Matrícula - Jugador 5" required></div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="terminos" required>
+                        <label class="form-check-label text-muted" style="font-size: 0.85rem;" for="terminos">
+                            Confirmo mi participación en este torneo institucional de la UAdeO y acataré las reglas del comité organizador.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-ejecutivo w-100">
+                        Inscribirme al Torneo
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

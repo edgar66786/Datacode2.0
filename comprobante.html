@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprobante de Inscripción - DATA CODE 2.0</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f4f6f8; font-family: 'Segoe UI', sans-serif; padding: 40px 0; }
+        .comprobante-box { max-width: 650px; margin: 0 auto; background: white; border-radius: 12px; border: 1px solid #dee2e6; box-shadow: 0 10px 25px rgba(0,0,0,0.05); overflow: hidden; }
+        .header-comp { background: linear-gradient(135deg, #4A0C1A 0%, #6B1226 100%); color: white; padding: 30px; text-align: center; border-bottom: 4px solid #C8A14D; }
+        .info-row { border-bottom: 1px dashed #dee2e6; padding: 12px 0; }
+        @media print {
+            body { background: white !important; }
+            .no-print { display: none !important; }
+            .comprobante-box { border: none; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="comprobante-box">
+            <div class="header-comp">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/47/Logo_UADEO.png" alt="UAdeO" height="40" class="mb-2 bg-white rounded p-1">
+                <h3 class="fw-bold text-uppercase mb-1" style="font-size: 1.3rem;">Orden de Referencia Institucional</h3>
+                <p class="text-warning mb-0 small">DATA CODE 2.0 — Universidad Autónoma de Occidente</p>
+            </div>
+
+            <div class="p-4">
+                <div class="alert {% if inscripcion.modalidad == 'Gratis' %}alert-success{% else %}alert-warning{% endif %} d-flex align-items-center mb-4">
+                    <i class="bi {% if inscripcion.modalidad == 'Gratis' %}bi-check-circle-fill text-success{% else %}bi-exclamation-triangle-fill text-warning{% endif %} fs-4 me-3"></i>
+                    <div>
+                        <strong>Estatus Actual:</strong> {{ inscripcion.estado_pago }}<br>
+                        <small class="text-muted">
+                            {% if inscripcion.modalidad == 'Gratis' %}
+                                Su registro se ha completado de forma exitosa sin costo alguno.
+                            {% else %}
+                                Para validar su inscripción, efectúe su aportación en Caja Universitaria o mediante transferencia indicando su folio.
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold text-dark mb-3" style="color: #6B1226 !important;">Detalles del Registro</h5>
+                
+                <div class="row info-row">
+                    <div class="col-5 text-muted fw-semibold">Folio de Referencia:</div>
+                    <div class="col-7 font-monospace fw-bold text-danger">{{ inscripcion.folio_pago }}</div>
+                </div>
+                <div class="row info-row">
+                    <div class="col-5 text-muted fw-semibold">Disciplina / Torneo:</div>
+                    <div class="col-7 fw-bold text-dark">{{ inscripcion.torneo_nombre }}</div>
+                </div>
+                <div class="row info-row">
+                    <div class="col-5 text-muted fw-semibold">Nombre del Equipo:</div>
+                    <div class="col-7 text-dark">{{ inscripcion.equipo }}</div>
+                </div>
+                <div class="row info-row">
+                    <div class="col-5 text-muted fw-semibold">Capitán / Alumno:</div>
+                    <div class="col-7 text-dark">{{ inscripcion.capitan_nombre }} ({{ inscripcion.matricula }})</div>
+                </div>
+                <div class="row info-row">
+                    <div class="col-5 text-muted fw-semibold">Modalidad y Costo:</div>
+                    <div class="col-7 text-dark">{{ inscripcion.modalidad }} — <strong>{{ inscripcion.costo }}</strong></div>
+                </div>
+
+                {% if inscripcion.modalidad != 'Gratis' %}
+                <div class="mt-4 p-3 bg-light rounded border">
+                    <h6 class="fw-bold text-dark mb-2" style="font-size: 0.85rem;"><i class="bi bi-info-circle me-1 text-primary"></i>Instrucciones de Pago:</h6>
+                    <ol class="small text-muted mb-0 ps-3">
+                        <li>Acuda a Caja Única de la UAdeO o realice transferencia bancaria institucional.</li>
+                        <li>Presente o reporte el código de folio <strong class="text-dark">{{ inscripcion.folio_pago }}</strong> en el concepto.</li>
+                        <li>Una vez validado por el comité organizador, su gafete digital se actualizará automáticamente a "Inscripción Aprobada".</li>
+                    </ol>
+                </div>
+                {% endif %}
+
+                <div class="mt-4 text-center no-print d-flex justify-content-center gap-2">
+                    <a href="/torneo" class="btn btn-outline-secondary px-4 fw-bold rounded-pill">Volver a Torneos</a>
+                    <button onclick="window.print()" class="btn btn-warning px-4 fw-bold rounded-pill text-dark">
+                        <i class="bi bi-printer-fill me-1"></i> Imprimir / Guardar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

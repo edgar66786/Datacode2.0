@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comité Organizador | DATA CODE 2.0 - UAdeO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        .bg-uadeo { background-color: #6B1226 !important; }
+        .text-uadeo { color: #6B1226 !important; }
+        .btn-uadeo { background-color: #6B1226; color: white; border: 2px solid #C8A14D; font-weight: bold; }
+        .btn-uadeo:hover { background-color: #C8A14D; color: #4A0C1A; border-color: #6B1226; }
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', system-ui, sans-serif; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-uadeo shadow-sm">
+        <div class="container-fluid px-4">
+            <span class="navbar-brand fw-bold d-flex align-items-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/47/Logo_UADEO.png" alt="UAdeO" height="30" class="me-2 bg-white rounded p-1">
+                Comité Organizador - DATA CODE 2.0
+            </span>
+            <div>
+                <a href="/" class="btn btn-outline-light btn-sm fw-bold me-2">Ir al Inicio</a>
+                {% if alumno and alumno['matricula'] %}
+                    <a href="/dashboard/{{ alumno['matricula'] }}" class="btn btn-outline-light btn-sm fw-bold">Mi Dashboard</a>
+                {% else %}
+                    <a href="/inscripcion" class="btn btn-outline-light btn-sm fw-bold">Iniciar Sesión</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold text-uadeo">Buzón de Ideas y Votación Estudiantil</h2>
+                <p class="text-muted">Apoya las propuestas de tus compañeros votando por las dinámicas que te gustaría ver en el evento, o propón una nueva idea para el comité.</p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-12">
+                <div class="card shadow-sm border-0 rounded-4 p-4 border-start border-warning border-5 bg-white">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div>
+                            <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2 small">
+                                <i class="bi bi-shield-check-fill me-1"></i> Evaluación Especial
+                            </span>
+                            <h4 class="fw-bold text-uadeo mb-1">Dictamen Técnico de Formato Operativo</h4>
+                            <p class="text-muted small mb-0">Analiza las alternativas de viabilidad (Hackathon vs Buildathon) y emite tu voto institucional.</p>
+                        </div>
+                        <div>
+                            <a href="/comite/eleccion" class="btn btn-uadeo px-4 py-2 shadow-sm">
+                                <i class="bi bi-file-earmark-text-fill me-2"></i> Ver Dictamen Técnico
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            
+            <div class="col-lg-5">
+                <div class="card shadow-sm border-0 rounded-4 p-4 h-100 border-top border-warning border-4">
+                    <h4 class="fw-bold text-uadeo mb-3"><i class="bi bi-lightbulb-fill text-warning me-2"></i>Propón una Dinámica</h4>
+                    <p class="text-muted small mb-4">¿Tienes una idea para un taller, conferencia o torneo? Compártela con el comité organizador.</p>
+                    
+                    <form action="/propuesta/nueva" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-secondary">Título de la Propuesta</label>
+                            <input type="text" class="form-control" name="titulo" placeholder="Ej. Torneo de Programación Rápida" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-secondary">Descripción Breve / Opinión</label>
+                            <textarea class="form-control" name="descripcion" rows="3" placeholder="Explica de qué trata tu idea..." required></textarea>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-uadeo py-2 shadow-sm"><i class="bi bi-send-fill me-2"></i> Enviar Propuesta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="card shadow-sm border-0 rounded-4 p-4 h-100">
+                    <h4 class="fw-bold text-uadeo mb-3"><i class="bi bi-check2-square me-2"></i>Propuestas Activas para Votar</h4>
+                    
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Propuesta</th>
+                                    <th class="text-center">Votos</th>
+                                    <th class="text-end">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for propuesta in propuestas %}
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold text-dark">{{ propuesta['titulo'] }}</div>
+                                        <small class="text-muted">{{ propuesta['descripcion'] if propuesta['descripcion'] else 'Propuesta estudiantil' }}</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge bg-warning text-dark px-3 py-2 fs-6 fw-bold rounded-pill">{{ propuesta['votos_favor'] }}</span>
+                                    </td>
+                                    <td class="text-end">
+                                        {% if propuesta['id'] in votos_usuario %}
+                                            <button class="btn btn-sm btn-secondary disabled" disabled>
+                                                <i class="bi bi-check-circle-fill me-1"></i> Votado
+                                            </button>
+                                        {% else %}
+                                            <form action="/votar/{{ propuesta['id'] }}" method="POST" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-uadeo shadow-sm">
+                                                    <i class="bi bi-hand-thumbs-up-fill me-1"></i> Votar
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">No hay propuestas registradas aún. ¡Sé el primero en proponer una!</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

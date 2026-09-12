@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Estudiante | DATA CODE 2.0 - UAdeO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --uadeo-guinda: #6B1226;
+            --uadeo-guinda-suave: #8A1C35;
+            --uadeo-dorado: #C8A14D;
+            --uadeo-beige: #FAF8F5;
+            --texto-principal: #2D3142;
+            --texto-secundario: #6C757D;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4A0C1A 0%, var(--uadeo-guinda) 50%, #2D3142 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--texto-principal);
+            position: relative; 
+            z-index: 1; 
+            min-height: 100vh;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+        }
+
+        body::before {
+            content: ''; 
+            position: fixed; 
+            top: -10%; 
+            left: -10%; 
+            width: 120vw; 
+            height: 120vh;
+            background-image: url("{{ url_for('static', filename='lince.png') }}");
+            background-repeat: no-repeat; 
+            background-position: center center; 
+            background-size: 110vh;
+            opacity: 0.05; 
+            filter: blur(10px); 
+            z-index: -1;
+        }
+
+        .header-extendido {
+            background: linear-gradient(135deg, #3d0814 0%, var(--uadeo-guinda) 100%);
+            width: 100%; padding: 20px 40px; border-bottom: 5px solid var(--uadeo-dorado);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.4); display: flex; justify-content: space-between; align-items: center;
+            position: relative;
+            z-index: 1060;
+        }
+        .header-logo-container { display: flex; align-items: center; gap: 20px; text-decoration: none; }
+        .header-logo-container img {
+            width: 55px; height: 55px; object-fit: contain; background: white; border-radius: 50%; padding: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .header-titulo { color: white; font-weight: 800; font-size: 1.4rem; letter-spacing: 1px; margin: 0; text-transform: uppercase; }
+        .header-subtitulo { color: var(--uadeo-dorado); font-size: 0.8rem; font-weight: 600; margin: 0; letter-spacing: 0.5px; }
+
+        .nav-categorias {
+            background-color: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--uadeo-dorado);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15); 
+            padding: 0 20px;
+            z-index: 1020;
+        }
+        .nav-categorias .nav-link, .nav-categorias .menu-enlace {
+            color: var(--texto-secundario); font-weight: 700; font-size: 0.9rem;
+            padding: 16px 12px; border-bottom: 4px solid transparent; transition: all 0.25s ease;
+            display: flex; align-items: center; gap: 5px; text-decoration: none; background: none; border-top: none; border-left: none; border-right: none;
+        }
+        .nav-categorias .nav-link:hover, .nav-categorias .menu-enlace:hover { color: var(--uadeo-guinda); background-color: rgba(107, 18, 38, 0.04); }
+        .nav-categorias .nav-link.active {
+            color: var(--uadeo-guinda); border-bottom-color: var(--uadeo-guinda); background-color: rgba(200, 161, 77, 0.12);
+        }
+
+        /* DISEÑO MEJORADO DE TARJETAS DEL DASHBOARD */
+        .tarjeta-panel-moderna {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(200, 161, 77, 0.35);
+            border-radius: 16px;
+            padding: 30px;
+            height: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            backdrop-filter: blur(10px);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .tarjeta-panel-moderna:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 35px rgba(107, 18, 38, 0.2);
+        }
+        .tarjeta-panel-moderna::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--uadeo-guinda), var(--uadeo-dorado));
+        }
+
+        .bienvenida-banner {
+            background: rgba(255, 255, 255, 0.95); 
+            border: 1px solid rgba(200, 161, 77, 0.3);
+            border-left: 6px solid var(--uadeo-dorado); border-radius: 14px; padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2); 
+            backdrop-filter: blur(8px);
+        }
+
+        .item-taller-lista {
+            background: white; border: 1px solid rgba(107, 18, 38, 0.1); border-radius: 12px;
+            padding: 22px; margin-bottom: 15px; transition: 0.2s;
+        }
+        .item-taller-lista:hover { border-color: var(--uadeo-dorado); box-shadow: 0 6px 20px rgba(107, 18, 38, 0.12); }
+
+        .btn-uadeo {
+            background-color: var(--uadeo-guinda); color: white; font-weight: 700;
+            border: 2px solid var(--uadeo-dorado); padding: 10px 20px; border-radius: 8px;
+            transition: all 0.2s ease; text-decoration: none; font-size: 0.9rem;
+        }
+        .btn-uadeo:hover { background-color: var(--uadeo-dorado); color: var(--uadeo-guinda); border-color: var(--uadeo-guinda); }
+
+        .btn-outline-uadeo {
+            background-color: transparent; color: var(--uadeo-guinda); font-weight: 700;
+            border: 2px solid var(--uadeo-guinda); padding: 10px 20px; border-radius: 8px;
+            transition: all 0.2s ease; text-decoration: none; font-size: 0.9rem;
+        }
+        .btn-outline-uadeo:hover { background-color: var(--uadeo-guinda); color: white; }
+    </style>
+</head>
+<body>
+
+    <header class="header-extendido sticky-top">
+        <a href="/inicio" class="header-logo-container">
+            <img src="{{ url_for('static', filename='lince.png') }}" alt="Logo UAdeO" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/47/Logo_UADEO.png'">
+            <div>
+                <h1 class="header-titulo">DATA CODE 2.0</h1>
+                <p class="header-subtitulo">Universidad Autónoma de Occidente — Guamúchil</p>
+            </div>
+        </a>
+        
+        <div class="d-flex align-items-center gap-3">
+            <div class="dropdown">
+                <button class="btn btn-outline-light dropdown-toggle border-2 px-3 py-1 text-white fw-bold d-flex align-items-center gap-2" type="button" id="perfilDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background: rgba(255,255,255,0.1);">
+                    <i class="bi bi-person-circle text-warning fs-5"></i> <span>{{ alumno['nombre'] }}</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 py-2" aria-labelledby="perfilDropdown" style="min-width: 220px; border-radius: 10px; z-index: 1070;">
+                    <li><h6 class="dropdown-header text-uppercase text-muted fs-7 fw-bold">Cuenta Lince</h6></li>
+                    <li>
+                        <span class="dropdown-item-text small text-secondary">
+                            <i class="bi bi-card-heading me-1"></i> Matrícula: <strong>{{ alumno['matricula'] }}</strong>
+                        </span>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item py-2 fw-semibold text-dark" href="/gafete/{{ alumno['matricula'] }}">
+                            <i class="bi bi-person-badge text-primary me-2"></i> Mi Gafete Digital
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item py-2 fw-semibold text-danger" href="/inscripcion">
+                            <i class="bi bi-box-arrow-right me-2"></i> Cerrar Sesión
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <nav class="nav-categorias sticky-top" style="top: 95px;">
+        <div class="container">
+            <ul class="nav nav-pills justify-content-center align-items-center" id="dashboardTabs" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="tab-estatus" data-bs-toggle="pill" data-bs-target="#content-estatus" type="button" role="tab">
+                        <i class="bi bi-speedometer2"></i> Mi Estatus
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="tab-talleres" data-bs-toggle="pill" data-bs-target="#content-talleres" type="button" role="tab">
+                        <i class="bi bi-journal-code"></i> Talleres
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <a class="menu-enlace" href="/cronograma">
+                        <i class="bi bi-calendar3"></i> Cronograma
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="menu-enlace" href="/torneo">
+                        <i class="bi bi-controller"></i> Esports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="menu-enlace" href="/ganadores">
+                        <i class="bi bi-trophy-fill"></i> Ganadores
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="menu-enlace" href="/gafete/{{ alumno['matricula'] }}">
+                        <i class="bi bi-person-badge"></i> Gafete
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="menu-enlace" href="/comite">
+                        <i class="bi bi-people-fill"></i> Comité
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="menu-enlace" href="/rubrica">
+                        <i class="bi bi-award"></i> Rúbrica
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container py-5 my-auto">
+        <div class="tab-content" id="dashboardContent">
+            
+            <div class="tab-pane fade show active" id="content-estatus" role="tabpanel">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="bienvenida-banner d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                            <div>
+                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2 small shadow-sm">
+                                    <i class="bi bi-patch-check-fill me-1"></i> Sesión Activa
+                                </span>
+                                <h2 class="fw-bold mb-1" style="color: var(--uadeo-guinda);">¡Bienvenido, {{ alumno['nombre'] }}!</h2>
+                                <p class="text-muted mb-0 small">Unidad: <strong>{{ alumno['unidad_regional'] }}</strong> | Turno: <strong>{{ alumno['turno'] }}</strong> | Matrícula: <strong>{{ alumno['matricula'] }}</strong></p>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="/gafete/{{ alumno['matricula'] }}" class="btn btn-uadeo shadow-sm">
+                                    <i class="bi bi-person-badge me-1"></i> Ver Gafete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- TARJETA TALLER -->
+                    <div class="col-md-4">
+                        <div class="tarjeta-panel-moderna text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="fs-1 mb-3" style="color: var(--uadeo-guinda);"><i class="bi bi-journal-check"></i></div>
+                                <h5 class="fw-bold mb-2">Taller Registrado</h5>
+                                <p class="text-success fw-bold fs-6 mb-3 px-2 py-1 bg-light rounded border">{{ alumno['taller'] }}</p>
+                                <p class="text-muted small">Tu espacio está asegurado para las dinámicas prácticas.</p>
+                            </div>
+                            <button class="btn btn-outline-uadeo mt-3 shadow-sm w-100" onclick="document.getElementById('tab-talleres').click()">
+                                <i class="bi bi-arrow-repeat me-1"></i> Cambiar de Taller
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- TARJETA TORNEO ESPORTS -->
+                    <div class="col-md-4">
+                        <div class="tarjeta-panel-moderna text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="fs-1 mb-3 text-warning"><i class="bi bi-controller"></i></div>
+                                <h5 class="fw-bold mb-2">Torneo Esports</h5>
+                                <p class="text-primary fw-bold fs-6 mb-3 px-2 py-1 bg-light rounded border">{{ alumno['torneo'] if alumno['torneo'] else 'Sin torneo inscrito' }}</p>
+                                <p class="text-muted small">Competencia oficial en la liga universitaria.</p>
+                            </div>
+                            <a href="/torneo" class="btn btn-uadeo mt-3 shadow-sm w-100">
+                                <i class="bi bi-plus-circle me-1"></i> Ver / Inscribir Torneo
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- TARJETA ACCESO INSTITUCIONAL -->
+                    <div class="col-md-4">
+                        <div class="tarjeta-panel-moderna text-center d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="fs-1 mb-3 text-danger"><i class="bi bi-qr-code-scan"></i></div>
+                                <h5 class="fw-bold mb-2">Credencial Digital</h5>
+                                <p class="text-muted small mb-3">Presenta tu gafete o código QR en los puntos de entrada autorizados.</p>
+                            </div>
+                            <a href="/gafete/{{ alumno['matricula'] }}" class="btn btn-uadeo mt-3 shadow-sm w-100">
+                                <i class="bi bi-person-badge me-1"></i> Abrir Gafete
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="content-talleres" role="tabpanel">
+                <div class="tarjeta-panel-moderna">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h4 class="fw-bold mb-1" style="color: var(--uadeo-guinda);"><i class="bi bi-journal-code me-2"></i>Catálogo de Talleres</h4>
+                            <p class="text-muted small mb-0">Selecciona el taller de tu preferencia con base en la disponibilidad y horarios.</p>
+                        </div>
+                        <span class="badge bg-light text-dark border px-3 py-2 shadow-sm">Actual: <strong>{{ alumno['taller'] }}</strong></span>
+                    </div>
+
+                    <div class="lista-talleres">
+                        {% for taller in talleres %}
+                        <div class="item-taller-lista d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                            <div>
+                                <h6 class="fw-bold text-dark mb-1">{{ taller['titulo'] }}</h6>
+                                
+                                <div class="mb-2 d-flex flex-wrap gap-2">
+                                    <span class="badge bg-light text-dark border"><i class="bi bi-geo-alt me-1 text-danger"></i> {{ taller['lugar'] }}</span>
+                                    <span class="badge bg-light text-dark border"><i class="bi bi-calendar-event me-1 text-primary"></i> {{ taller['fecha'] }}</span>
+                                    <span class="badge bg-light text-dark border"><i class="bi bi-clock me-1 text-warning"></i> {{ taller['horario'] }}</span>
+                                    <span class="badge bg-light text-dark border"><i class="bi bi-person-badge me-1 text-success"></i> {{ taller['responsable'] }}</span>
+                                </div>
+
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary me-1">{{ taller['cupo'] }}</span>
+                                    {% if taller['lugares_disponibles'] > 0 %}
+                                        <span class="badge bg-success text-white">Disponibles: {{ taller['lugares_disponibles'] }}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger text-white">¡Agotado!</span>
+                                    {% endif %}
+                                </div>
+
+                                <p class="small text-muted mb-1">{{ taller['descripcion'] }}</p>
+                                <p class="small text-secondary mb-0"><strong>Requisito:</strong> {{ taller['requisitos'] }}</p>
+                            </div>
+                            <div>
+                                <form action="/inscribir_taller/{{ taller['id'] }}" method="POST">
+                                    <input type="hidden" name="matricula" value="{{ alumno['matricula'] }}">
+                                    {% if taller['lugares_disponibles'] > 0 %}
+                                        <button type="submit" class="btn btn-uadeo text-nowrap shadow-sm">
+                                            <i class="bi bi-check2-circle me-1"></i> Inscribirme
+                                        </button>
+                                    {% else %}
+                                        <button type="button" class="btn btn-secondary text-nowrap" disabled>
+                                            <i class="bi bi-x-circle me-1"></i> Agotado
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="py-4 text-center" style="background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.1);">
+        <div class="container">
+            <p class="mb-1 fw-bold text-white-50">Universidad Autónoma de Occidente (UAdeO) — Unidad Regional Guamúchil</p>
+            <p class="small mb-0 text-white-50">Plataforma DATA CODE 2.0 © 2026</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Oficial | DATA CODE 2.0 - UAdeO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --uadeo-guinda: #6B1226;
+            --uadeo-guinda-suave: #8A1C35;
+            --uadeo-dorado: #C8A14D;
+            --uadeo-beige: #FAF8F5;
+            --texto-principal: #2D3142;
+            --texto-secundario: #6C757D;
+        }
+
+        body {
+            background-color: var(--uadeo-beige);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--texto-principal);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -10%; left: -10%; width: 120vw; height: 120vh;
+            background-image: url("{{ url_for('static', filename='lince.png') }}");
+            background-repeat: no-repeat; background-position: center center; background-size: 110vh;
+            opacity: 0.08; filter: blur(8px); z-index: -1;
+        }
+
+        .header-extendido {
+            background: linear-gradient(135deg, var(--uadeo-guinda) 0%, var(--uadeo-guinda-suave) 100%);
+            width: 100%; padding: 20px 40px;
+            border-bottom: 5px solid var(--uadeo-dorado);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .header-logo-container { display: flex; align-items: center; gap: 20px; text-decoration: none; }
+        .header-logo-container img {
+            width: 55px; height: 55px; object-fit: contain; background: white; border-radius: 50%; padding: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .header-titulo { color: white; font-weight: 800; font-size: 1.4rem; letter-spacing: 1px; margin: 0; text-transform: uppercase; }
+        .header-subtitulo { color: var(--uadeo-dorado); font-size: 0.8rem; font-weight: 600; margin: 0; letter-spacing: 0.5px; }
+
+        .tarjeta-cronograma {
+            background-color: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(107, 18, 38, 0.08);
+            border-radius: 14px; padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            max-width: 900px; margin: 40px auto;
+        }
+
+        .timeline-item {
+            border-left: 3px solid var(--uadeo-dorado);
+            padding-left: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute; left: -8px; top: 0;
+            width: 13px; height: 13px; border-radius: 50%;
+            background-color: var(--uadeo-guinda);
+            border: 2px solid var(--uadeo-dorado);
+        }
+
+        .badge-tipo {
+            font-size: 0.75rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;
+        }
+
+        .btn-dorado {
+            background-color: var(--uadeo-dorado); color: var(--uadeo-guinda); font-weight: 700; border: none; border-radius: 6px; padding: 8px 20px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .btn-dorado:hover { background-color: #d6af59; color: var(--uadeo-guinda); }
+    </style>
+</head>
+<body>
+
+    <header class="header-extendido sticky-top">
+        <a href="/" class="header-logo-container">
+            <img src="{{ url_for('static', filename='lince.png') }}" alt="Logo UAdeO" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/47/Logo_UADEO.png'">
+            <div>
+                <h1 class="header-titulo">DATA CODE 2.0</h1>
+                <p class="header-subtitulo">Universidad Autónoma de Occidente — Guamúchil</p>
+            </div>
+        </a>
+        <div>
+            <a href="javascript:history.back()" class="btn btn-dorado btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Regresar
+            </a>
+        </div>
+    </header>
+
+    <div class="container my-auto py-4">
+        <div class="tarjeta-cronograma">
+            <div class="text-center mb-5">
+                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2 small">
+                    <i class="bi bi-calendar-event me-1"></i> Itinerario Oficial
+                </span>
+                <h2 class="fw-bold text-uppercase" style="color: var(--uadeo-guinda);">Cronograma y Horarios del Evento</h2>
+                <p class="text-muted small">Consulta las actividades programadas, sedes y horarios para aprovechar al máximo tu participación.</p>
+            </div>
+
+            <div class="timeline ps-2">
+                {% for act in actividades %}
+                <div class="timeline-item">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-1">
+                        <span class="fw-bold text-dark fs-6"><i class="bi bi-clock me-1 text-secondary"></i> {{ act['horario'] }}</span>
+                        {% if act['tipo'] == 'taller' %}
+                            <span class="badge bg-primary badge-tipo">Taller Académico</span>
+                        {% elif act['tipo'] == 'esports' %}
+                            <span class="badge bg-danger badge-tipo">Esports / Torneo</span>
+                        {% else %}
+                            <span class="badge bg-secondary badge-tipo">Evento General</span>
+                        {% endif %}
+                    </div>
+                    <h5 class="fw-bold mb-1" style="color: var(--uadeo-guinda-suave);">{{ act['actividad'] }}</h5>
+                    <p class="text-muted small mb-0"><i class="bi bi-geo-alt-fill text-warning me-1"></i> Sede: <strong>{{ act['lugar'] }}</strong></p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-4 text-center" style="background-color: transparent; border-top: 1px solid rgba(107, 18, 38, 0.1);">
+        <div class="container">
+            <p class="mb-1 fw-bold text-muted">Universidad Autónoma de Occidente (UAdeO) — Unidad Regional Guamúchil</p>
+            <p class="small mb-0 text-muted">Plataforma DATA CODE 2.0 © 2026</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
