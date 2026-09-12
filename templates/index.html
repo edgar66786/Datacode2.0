@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATA CODE 2.0 | Portal Oficial - UAdeO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --uadeo-guinda: #6B1226;
+            --uadeo-guinda-suave: #8A1C35;
+            --uadeo-dorado: #C8A14D;
+            --uadeo-beige: #FAF8F5;
+            --uadeo-beige-oscuro: #EAE3D8;
+            --texto-principal: #2D3142;
+            --texto-secundario: #6C757D;
+        }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            background-color: var(--uadeo-beige);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--texto-principal);
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+        }
+
+        /* FONDO DIFUMINADO DEL LINCE */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -10%; 
+            left: -10%; 
+            width: 120vw; 
+            height: 120vh;
+            background-image: url("{{ url_for('static', filename='lince.png') }}");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 110vh;
+            opacity: 0.08; 
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        /* NAVBAR SUPERIOR */
+        .navbar {
+            background: rgba(107, 18, 38, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--uadeo-dorado);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        .navbar-brand { font-weight: 900; color: white !important; letter-spacing: 1px; }
+        .nav-link { color: rgba(255,255,255,0.85) !important; font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px; margin: 0 10px; transition: 0.3s; }
+        .nav-link:hover { color: var(--uadeo-dorado) !important; }
+        .btn-dorado { background-color: var(--uadeo-dorado); color: var(--uadeo-guinda); font-weight: 700; padding: 8px 20px; border-radius: 6px; text-decoration: none; transition: 0.3s; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .btn-dorado:hover { background-color: white; color: var(--uadeo-guinda); }
+
+        /* HERO SECTION CON EL LOGO DEL LINCE DIFUMINADO DE FONDO Y COLOR GUINDA INSTITUCIONAL */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            /* Gradiente guinda profundo y elegante combinado con el lince de fondo difuminado */
+            background: linear-gradient(135deg, rgba(107,18,38,0.88) 0%, rgba(70,10,22,0.92) 100%), url("{{ url_for('static', filename='lince.png') }}") center/contain no-repeat fixed;
+            color: white;
+            padding-top: 100px;
+            padding-bottom: 60px;
+        }
+        
+        /* Capa extra de desenfoque y opacidad suave aplicada directo al fondo del lince en el hero */
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("{{ url_for('static', filename='lince.png') }}") center/50vh no-repeat fixed;
+            opacity: 0.15;
+            filter: blur(12px);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .hero-section > .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 5vw, 5rem);
+            font-weight: 900;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ffffff, var(--uadeo-dorado));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 1s ease-out;
+        }
+        .hero-subtitle {
+            font-size: 1.15rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: rgba(255,255,255,1);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        .eco-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(40, 167, 69, 0.35);
+            border: 1px solid #28a745;
+            color: #2eff6f;
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(4px);
+            animation: fadeInDown 1s ease-out 0.2s both;
+        }
+        .hero-buttons { animation: fadeInUp 1s ease-out 0.6s both; }
+        .btn-hero-primary { background: var(--uadeo-dorado); color: var(--uadeo-guinda); font-weight: 800; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-size: 1.05rem; transition: 0.3s; border: 2px solid var(--uadeo-dorado); display: inline-block; margin-right: 10px; margin-bottom: 10px; }
+        .btn-hero-primary:hover { background: transparent; color: var(--uadeo-dorado); }
+        .btn-hero-secondary { background: rgba(255,255,255,0.15); color: white; font-weight: 700; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-size: 1.05rem; transition: 0.3s; border: 2px solid white; display: inline-block; margin-bottom: 10px; backdrop-filter: blur(5px); }
+        .btn-hero-secondary:hover { background: white; color: var(--uadeo-guinda); }
+
+        /* ANIMACIONES */
+        .carousel-hero { animation: fadeInUp 1s ease-out 0.5s both; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* IMÁGENES DEL CARRUSEL RESPONSIVAS */
+        .img-carrusel {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        @media (min-width: 768px) {
+            .img-carrusel {
+                height: 420px;
+            }
+        }
+
+        /* TARJETAS CON FOTOS DISPERSAS (SIN TEXTO) */
+        .tarjeta-foto-dispersa {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid rgba(200, 161, 77, 0.4);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .tarjeta-foto-dispersa:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(107, 18, 38, 0.3);
+            border-color: var(--uadeo-guinda);
+        }
+        .tarjeta-foto-dispersa img {
+            height: 220px;
+            width: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* BLOQUES INFORMATIVOS EXTRA */
+        .info-card-extra {
+            background: white;
+            border-left: 5px solid var(--uadeo-dorado);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .info-card-extra:hover { transform: translateY(-5px); }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR SUPERIOR FLOTANTE -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <img src="{{ url_for('static', filename='lince.png') }}" alt="Logo" width="40" height="40" class="bg-white rounded-circle p-1" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/4/47/Logo_UADEO.png'">
+                DATA CODE 2.0
+            </a>
+            <button class="navbar-toggler bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/talleres">Talleres</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/torneos">Torneos</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a href="/inscripcion" class="btn-dorado"><i class="bi bi-person-circle me-1"></i> Mi Portal</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION INTEGRADA (CON LINCED DE FONDO DIFUMINADO Y CARRUSEL CON CARRUSEL1.jpeg, etc.) -->
+    <section id="inicio" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                
+                <!-- COLUMNA IZQUIERDA: TEXTO PRINCIPAL -->
+                <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0 pe-lg-4">
+                    <div class="eco-badge">
+                        <i class="bi bi-tree-fill me-2"></i> Evento 100% Sustentable y Libre de Papel
+                    </div>
+                    <h1 class="hero-title">DATA CODE 2.0</h1>
+                    <p class="hero-subtitle mb-4">
+                        El encuentro tecnológico oficial de la <strong>Universidad Autónoma de Occidente</strong>. 
+                        Únete a nuestra jornada de innovación, potencia tus habilidades en talleres especializados 
+                        y demuestra tu nivel en la liga de esports institucional.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="/talleres" class="btn-hero-primary"><i class="bi bi-laptop me-2"></i>Ver Talleres</a>
+                        <a href="/torneos" class="btn-hero-secondary"><i class="bi bi-controller me-2"></i>Torneos Esports</a>
+                    </div>
+                </div>
+
+                <!-- COLUMNA DERECHA: CARRUSEL RESPONSIVO (carrusel1.jpeg, carrusel2.jpeg, carrusel3.jpeg) -->
+                <div class="col-lg-6 carousel-hero">
+                    <div id="carouselDataCode" class="carousel slide shadow-lg rounded-4 overflow-hidden border border-3" style="border-color: rgba(200, 161, 77, 0.5) !important;" data-bs-ride="carousel">
+                        
+                        <div class="carousel-indicators mb-2">
+                            <button type="button" data-bs-target="#carouselDataCode" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselDataCode" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselDataCode" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
+
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="{{ url_for('static', filename='carrusel1.jpeg') }}" class="d-block img-carrusel" alt="Carrusel 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{{ url_for('static', filename='carrusel2.jpeg') }}" class="d-block img-carrusel" alt="Carrusel 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="{{ url_for('static', filename='carrusel3.jpeg') }}" class="d-block img-carrusel" alt="Carrusel 3">
+                            </div>
+                        </div>
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselDataCode" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselDataCode" data-bs-slide="next">
+                            <span class="carousel-control-next-icon bg-dark rounded-circle p-2" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN: FOTOS DISPERSAS (carrusel4.jpeg, carrusel5.jpeg, carrusel6.jpeg, carrusel7.jpeg) Y CUADRO DE HONOR -->
+    <div class="container my-5" style="position: relative; z-index: 10;">
+        <div class="row align-items-center mb-5">
+            
+            <!-- COLUMNA IZQUIERDA: FOTOS DISPERSAS 4 y 5 -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="tarjeta-foto-dispersa">
+                    <img src="{{ url_for('static', filename='carrusel1.jpeg') }}" alt="Carrusel 4">
+                </div>
+                <div class="tarjeta-foto-dispersa mt-4">
+                    <img src="{{ url_for('static', filename='carrusel2.jpeg') }}" alt="Carrusel 5">
+                </div>
+            </div>
+
+            <!-- COLUMNA CENTRAL: CUADRO DE HONOR Y GANADORES -->
+            <div class="col-lg-6">
+                <div class="card shadow-lg border-0 rounded-4 overflow-hidden mb-4" style="background: linear-gradient(135deg, #ffffff 0%, #FAF8F5 100%); border-left: 6px solid var(--uadeo-dorado) !important;">
+                    <div class="card-body p-4">
+                        <div class="mb-3 pb-2 border-bottom text-center text-lg-start">
+                            <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2 shadow-sm">
+                                <i class="bi bi-trophy-fill me-1"></i> Podio Oficial
+                            </span>
+                            <h4 class="fw-bold mb-0" style="color: var(--uadeo-guinda);">Cuadro de Honor — Ganadores</h4>
+                        </div>
+
+                        <div class="row g-2">
+                            {% if ganadores %}
+                                {% for g in ganadores[:3] %}
+                                <div class="col-12">
+                                    <div class="p-2.5 bg-white rounded-3 shadow-sm border position-relative">
+                                        <div class="position-absolute top-0 end-0 translate-middle-y me-3">
+                                            <span class="badge bg-danger text-white shadow-sm px-2 py-1" style="font-size: 0.65rem;">{{ g['puesto'] }}</span>
+                                        </div>
+                                        <span class="badge bg-dark text-warning mb-1" style="font-size: 0.65rem; text-transform: uppercase;">{{ g['categoria'] }}</span>
+                                        <h6 class="fw-bold text-dark mb-1 text-truncate" style="font-size: 0.9rem;">{{ g['equipo_participante'] }}</h6>
+                                        <p class="text-muted mb-0 text-truncate" style="font-size: 0.75rem;"><i class="bi bi-people-fill me-1 text-secondary"></i> {{ g['integrantes'] }}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="col-12 text-center py-4 text-muted small border border-dashed rounded-3 bg-light">
+                                    <i class="bi bi-hourglass-split text-warning fs-3 mb-2 d-block"></i> 
+                                    El jurado calificador publicará los resultados y ganadores próximamente.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: FOTOS DISPERSAS 6 y 7 -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="tarjeta-foto-dispersa">
+                    <img src="{{ url_for('static', filename='carrusel3.jpeg') }}" alt="Carrusel 6">
+                </div>
+                <div class="tarjeta-foto-dispersa mt-4">
+                    <img src="{{ url_for('static', filename='carrusel4.jpeg') }}" alt="Carrusel 7">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SECCIÓN DE INFORMACIÓN GENERAL (INSTALACIONES UAdeO) -->
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="info-card-extra">
+                    <h6 class="fw-bold mb-2" style="color: var(--uadeo-guinda);"><i class="bi bi-building-fill me-2 text-warning"></i>Sede Oficial UAdeO</h6>
+                    <p class="small text-muted mb-0">Todas las actividades teóricas y torneos se llevarán a cabo de manera presencial en las instalaciones y laboratorios de la Unidad Regional Guamúchil.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card-extra">
+                    <h6 class="fw-bold mb-2" style="color: var(--uadeo-guinda);"><i class="bi bi-laptop-fill me-2 text-warning"></i>Práctica Tecnológica</h6>
+                    <p class="small text-muted mb-0">Dinámicas enfocadas en escenarios reales de ingeniería, bases de datos, maquetación web y herramientas de vanguardia.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="info-card-extra">
+                    <h6 class="fw-bold mb-2" style="color: var(--uadeo-guinda);"><i class="bi bi-joystick me-2 text-warning"></i>Liga de Esports Lince</h6>
+                    <p class="small text-muted mb-0">Espacio de sana competencia y recreación tecnológica para medir habilidades en consolas y torneos en red local.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER Minimalista -->
+    <footer class="py-4 text-center text-white" style="background-color: var(--uadeo-guinda);">
+        <div class="container">
+            <p class="mb-1 fw-bold">Universidad Autónoma de Occidente (UAdeO) — Unidad Regional Guamúchil</p>
+            <p class="small mb-0" style="color: rgba(255,255,255,0.7);">Plataforma DATA CODE 2.0 © 2026</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

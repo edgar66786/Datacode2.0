@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rúbrica Oficial de Evaluación - DATA CODE 2.0</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --uadeo-guinda: #6B1226;
+            --uadeo-oscuro: #4A0C1A;
+            --uadeo-dorado: #C8A14D;
+            --uadeo-beige: #FAF8F5;
+        }
+        body { 
+            background-color: var(--uadeo-beige); 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+            color: #2D3142; 
+        }
+        .header-uadeo { 
+            background: linear-gradient(135deg, var(--uadeo-oscuro) 0%, var(--uadeo-guinda) 100%); 
+            color: white; 
+            padding: 30px 40px; 
+            border-bottom: 5px solid var(--uadeo-dorado); 
+        }
+        .card-rubrica { 
+            background: #ffffff; 
+            border-radius: 14px; 
+            border: 1px solid rgba(200, 161, 77, 0.3); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+        }
+        .table-rubrica th {
+            background-color: var(--uadeo-guinda) !important;
+            color: white;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .table-rubrica td {
+            vertical-align: middle;
+            font-size: 0.9rem;
+        }
+        .criterio-titulo {
+            font-weight: 700;
+            color: var(--uadeo-guinda);
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header-uadeo d-flex justify-content-between align-items-center shadow-sm">
+        <div>
+            <h3 class="fw-bold mb-0 text-uppercase"><i class="bi bi-award-fill text-warning me-2"></i> Rúbrica Oficial de Evaluación Integral</h3>
+            <p class="small text-warning mb-0">Comité Técnico y Jurado Calificador | DATA CODE 2.0</p>
+        </div>
+        <div>
+            <a href="javascript:history.back()" class="btn btn-outline-light btn-sm fw-bold px-3">
+                <i class="bi bi-arrow-left me-1"></i> Regresar al Panel
+            </a>
+        </div>
+    </header>
+
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-xl-12">
+                <div class="card-rubrica p-4 p-md-5">
+                    
+                    <div class="text-center mb-5">
+                        <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2">Matriz de Ponderación y Criterios</span>
+                        <h2 class="fw-bold" style="color: var(--uadeo-guinda);">Evaluación de Competencias Técnicas y de Software</h2>
+                        <p class="text-muted">Esta matriz define los estándares de calidad, arquitectura y defensa que el jurado aplicará para calificar cada proyecto.</p>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle table-rubrica">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Criterio / Ponderación</th>
+                                    <th style="width: 20%;">Excelente (100%)</th>
+                                    <th style="width: 20%;">Satisfactorio (80%)</th>
+                                    <th style="width: 20%;">En Proceso (60%)</th>
+                                    <th style="width: 20%;">Insuficiente (40% o menos)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if criterios %}
+                                    {% for r in criterios %}
+                                    <tr>
+                                        <td>
+                                            <div class="criterio-titulo">{{ r['criterio'] }}</div>
+                                            <span class="badge bg-success mt-1">Peso: {{ r['porcentaje'] }}</span>
+                                        </td>
+                                        <td class="small text-muted">Implementación impecable, robusta y superior a lo esperado. Sin errores de ejecución.</td>
+                                        <td class="small text-muted">Cumple con los requerimientos principales de forma correcta y funcional.</td>
+                                        <td class="small text-muted">Funcionalidad parcial o con deficiencias notables en la lógica implementada.</td>
+                                        <td class="small text-muted">{{ r['descripcion'] }} (Ausente o no funcional).</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <!-- Rúbrica extendida por defecto si la base de datos está vacía -->
+                                    <tr>
+                                        <td>
+                                            <div class="criterio-titulo">1. Arquitectura y Código Limpio</div>
+                                            <span class="badge bg-success mt-1">Peso: 25%</span>
+                                        </td>
+                                        <td class="small">Estructura modular perfecta, aplicación estricta de patrones de diseño, código altamente legible y documentado.</td>
+                                        <td class="small">Código ordenado, separación clara de responsabilidades y buenas prácticas generales.</td>
+                                        <td class="small">Código monolítico o poco estructurado, con indicios de alta deuda técnica.</td>
+                                        <td class="small">Ausencia de estructura lógica, código confuso, duplicado o carente de organización.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="criterio-titulo">2. Base de Datos y Seguridad</div>
+                                            <span class="badge bg-success mt-1">Peso: 25%</span>
+                                        </td>
+                                        <td class="small">Base de datos relacional normalizada (3NF), consultas optimizadas, integridad referencial y prevención total de inyecciones.</td>
+                                        <td class="small">Tablas estructuradas correctamente y consultas funcionales operando sin errores críticos.</td>
+                                        <td class="small">Estructura de datos rudimentaria, con posibles fallos de integridad o datos estáticos (hardcoded).</td>
+                                        <td class="small">Falta de persistencia real de datos o vulnerabilidades críticas de seguridad expuestas.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="criterio-titulo">3. Innovación e Impacto Social / Ecológico</div>
+                                            <span class="badge bg-success mt-1">Peso: 25%</span>
+                                        </td>
+                                        <td class="small">Propuesta disruptiva con un enfoque ecológico o social claramente medible y de gran valor para la región.</td>
+                                        <td class="small">Solución creativa con aplicación práctica clara orientada a resolver una problemática real.</td>
+                                        <td class="small">Enfoque tradicional con poca diferenciación respecto a soluciones existentes.</td>
+                                        <td class="small">Falta de claridad en el propósito del proyecto o desconectado de la temática institucional.</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="criterio-titulo">4. Defensa Técnica y Demostración (Pitch)</div>
+                                            <span class="badge bg-success mt-1">Peso: 25%</span>
+                                        </td>
+                                        <td class="small">Exposición sobresaliente, dominio técnico absoluto del stack, demostración en vivo fluida y respuesta asertiva.</td>
+                                        <td class="small">Buena oratoria, explicación clara de la arquitectura y demostración funcional exitosa.</td>
+                                        <td class="small">Dificultades técnicas durante la demostración o respuestas poco claras a las preguntas del jurado.</td>
+                                        <td class="small">Imposibilidad de demostrar el funcionamiento del sistema o desconocimiento del código presentado.</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-warning mt-4 small mb-0 text-dark border-warning">
+                        <i class="bi bi-info-circle-fill me-1"></i> <strong>Criterio de Evaluación Final:</strong> La calificación definitiva se obtendrá mediante la sumatoria ponderada de los cuatro rubros anteriores, auditados directamente por el comité técnico de la UAdeO.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
